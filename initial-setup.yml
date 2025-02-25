@@ -1,0 +1,46 @@
+---
+- name: Install and configure Chrony on Ubuntu 24.04
+  hosts: all
+  become: yes  # Enable sudo privileges
+
+  tasks:
+    - name: Ensure Chrony package is installed
+      apt:
+        name: chrony
+        state: present
+        update_cache: yes
+      tags: install
+
+    - name: Configure Chrony with default Ubuntu NTP servers
+      template:
+        src: chrony.conf.j2
+        dest: /etc/chrony/chrony.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart Chrony
+      tags: configure
+
+    - name: Ensure Chrony service is enabled and started
+      systemd:
+        name: chrony
+        state: started
+        enabled: yes
+      tags: service
+
+    - name: Verify Chrony is running and synchronized
+      command: chronyc tracking
+      register: chrony_status
+      changed_when: false
+      tags: verify
+
+    - name: Display Chrony synchronization status
+      debug:
+        msg: "{{ chrony_status.stdout_lines }}"
+      tags: verify
+
+  handlers:
+    - name: Restart Chrony
+      systemd:
+        name: chrony
+        state: restarted
