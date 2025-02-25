@@ -25,7 +25,7 @@
 
     - name: Add Docker repository
       apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu noble stable
+        repo: deb [arch=arm64] https://download.docker.com/linux/ubuntu noble stable
         state: present
 
     - name: Update the apt package index again
