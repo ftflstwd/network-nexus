@@ -1,6 +1,6 @@
 ---
 - name: Install and configure Chrony on Ubuntu 24.04
-  hosts: all
+  hosts: localhost
   become: yes  # Enable sudo privileges
 
   tasks:
