@@ -1,18 +1,15 @@
 #!/bin/bash
 
-# Update package index
-sudo apt update && sudo apt upgrade -y
+# Update the system packages
+sudo dnf update -y
 
-# Install required dependencies
-sudo apt install -y software-properties-common
-
-# Add Ansible PPA repository
-sudo add-apt-repository --yes --update ppa:ansible/ansible
+# Install EPEL repository (Extra Packages for Enterprise Linux)
+sudo dnf install epel-release -y
 
 # Install Ansible
-sudo apt install -y ansible
+sudo dnf install ansible -y
 
-# Verify installation
+# Verify Ansible installation
 ansible --version
 
 echo "Ansible installation completed!"
