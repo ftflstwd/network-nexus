@@ -43,5 +43,5 @@
         state: started
         enabled: yes
     
-    - name: Setup docker_chrony
-      import_playbook: docker_chrony.yml
+    - name: Setup Chrony
+      import_playbook: chrony.yml
