@@ -1,3 +1,4 @@
+#cloud-config
 hostname: netnexus0
 fqdn: netnexus0.faithfulsteward.tech
 manage_etc_hosts: true
