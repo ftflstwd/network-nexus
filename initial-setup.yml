@@ -43,5 +43,3 @@
         state: started
         enabled: yes
     
-    - name: Setup Chrony
-      import_playbook: chrony.yml
