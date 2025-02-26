@@ -1,10 +1,19 @@
-hostname: netnexus1
-fqdn: netnexus1.exampledomain.com
+hostname: netnexus0
 manage_etc_hosts: true
 timezone: UTC
 package_update: true
 package_upgrade: true
 package_reboot_if_required: true
+
+users:
+- name: autom8
+  groups: users,adm,dialout,audio,netdev,video,plugdev,cdrom,games,input,gpio,spi,i2c,render,sudo
+  shell: /bin/bash
+  lock_passwd: false
+  passwd: $5$F4go5X.mVY$N5HA1sSELUdDwGF9oD.8HEV6jCj/4XzZAeB5t214sk6
+  ssh_authorized_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ4H3o7KtNEcyZDX0q4BCAk6TCk/DaUuaYPLAbqZJb/C
+  sudo: ALL=(ALL) NOPASSWD:ALL
 
 ansible:
   package_name: ansible-core
@@ -12,13 +21,3 @@ ansible:
   pull:
     url: https://github.com/ftflstwd/netnexus.git
     playbook_name: initial_setup.yml
-
-users:
-- name: autom8
-  groups: users,adm,dialout,audio,netdev,video,plugdev,cdrom,games,input,gpio,spi,i2c,render,sudo
-  shell: /bin/bash
-  lock_passwd: true
-  passwd: $5$jcm2NfjxJX$h7QvAqeXMmqlEs5Y.PPZV9WLzbZ8jUwlxaZQmAwFjI2
-  ssh_authorized_keys:
-    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ4H3o7KtNEcyZDX0q4BCAk6TCk/DaUuaYPLAbqZJb/C
-  sudo: ALL=(ALL) NOPASSWD:ALL
