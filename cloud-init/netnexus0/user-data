@@ -4,7 +4,17 @@ manage_etc_hosts: true
 timezone: UTC
 package_update: true
 package_upgrade: true
-package_reboot_if_required: true
+
+
+users:
+- name: autom8
+  groups: users,adm,dialout,audio,netdev,video,plugdev,cdrom,games,input,gpio,spi,i2c,render,sudo
+  shell: /bin/bash
+  lock_passwd: false
+  passwd: your_password_hash_here
+  ssh_authorized_keys:
+    - your_ssh_key_here
+  sudo: ALL=(ALL) NOPASSWD:ALL
 
 ansible:
   package_name: ansible-core
@@ -13,12 +23,4 @@ ansible:
     url: https://github.com/ftflstwd/netnexus.git
     playbook_name: initial_setup.yml
 
-users:
-- name: autom8
-  groups: users,adm,dialout,audio,netdev,video,plugdev,cdrom,games,input,gpio,spi,i2c,render,sudo
-  shell: /bin/bash
-  lock_passwd: true
-  passwd: your_password_hash_here
-  ssh_authorized_keys:
-    - your_ssh_key_here
-  sudo: ALL=(ALL) NOPASSWD:ALL
+
