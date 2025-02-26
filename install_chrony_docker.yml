@@ -1,18 +1,36 @@
 ---
-- name: deploy chrony docker container
+- name: install docker_chrony
   hosts: localhost
-  tasks:
-    - name: pull docker_chrony
-      docker_image:
-        name: ghcr.io/ftflstwd/docker_chrony
-        tag: sha256-79464cce259a7c8c3b2511dec6b5cf6684ae0b2e480612bcce793fc45a3c3fa6.sig
-        source: pull
+  become: yes
 
-    - name: run docker_chrony
-      docker_container:
-        name: chrony_container
-        image: ghcr.io/ftflstwd/docker_chrony:sha256-79464cce259a7c8c3b2511dec6b5cf6684ae0b2e480612bcce793fc45a3c3fa6.sig
-        state: started
-        ports:
-          - "123:123"
-        restart_policy: unless-stopped
+- name: copy install_docker_compose.yml to target host
+  ansible.builtin.copy:
+    content: |
+      services:
+        chrony:
+          image: ghcr.io/ftflstwd/docker_chrony:main
+          container_name: chrony
+          restart: unless-stopped
+          network_mode: host
+      dest: /opt/chrony/docker-compose.yml
+      mode: '0644'
+
+- name: deploy chrony
+  ansible.builtin.command:
+    cmd: docker-compose up -d
+    chdir: /opt/chrony
+    register: compose_result
+    changed_when: "'Creating' in compose_result.stdout or 'Starting' in compose_result.stdout"
+
+- name: verify chrony container is running
+  ansible.builtin.command:
+    cmd: docker ps -f name=chrony --format '{{.Status}}'
+    register: container_status
+    failed_when: "'Up' not in container_status.stdout"
+    retries: 5
+    delay: 2
+    until: "'Up' in container_status.stdout"
+
+- name: display container status
+  ansible.builtin.debug:
+    msg: "chrony container status: {{ container_status.stdout }}"
