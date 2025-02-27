@@ -3,17 +3,11 @@
   hosts: localhost
   become: yes
 
-- name: copy install_docker_compose.yml to target host
-  ansible.builtin.copy:
-    content: |
-      services:
-        chrony:
-          image: ghcr.io/ftflstwd/docker_chrony:main
-          container_name: chrony
-          restart: unless-stopped
-          network_mode: host
-      dest: /opt/chrony/docker-compose.yml
-      mode: '0644'
+- name: Download the playbook file
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/ftflstwd/netnexus/main/install_chrony_docker.yml
+    dest: /opt/chrony/install_chrony_docker.yml
+    mode: '0644'
 
 - name: deploy chrony
   ansible.builtin.command:
