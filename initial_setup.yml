@@ -55,22 +55,22 @@
 #        password: "{{ ghcr_password | default(omit) }}"  # Provide your GitHub token/password
 #      when: ghcr_username is defined and ghcr_password is defined
 
-- name: pull the docker_chrony image
-  community.docker.docker_image:
-    name: ghcr.io/ftflstwd/docker_chrony:main
-    source: pull
-    tag: "main"
-  register: pull_result
-  retries: 3
-  delay: 10
-  until: pull_result is success
+    - name: pull the docker_chrony image
+      community.docker.docker_image_pull:
+        name: ghcr.io/ftflstwd/docker_chrony:main
+        source: pull
+        tag: "main"
+      register: pull_result
+      retries: 3
+      delay: 10
+      until: pull_result is success
 
-- name: deploy the docker_chrony container
-  community.docker.docker_container:
-    name: chrony_container
-    image: "ghcr.io/ftflstwd/docker_chrony:main"
-    state: started
-    restart_policy: unless-stopped
-  register: container_result
-  retries: 3
-  delay: 10
+    - name: deploy the docker_chrony container
+      community.docker.docker_container:
+        name: chrony_container
+        image: "ghcr.io/ftflstwd/docker_chrony:main"
+        state: started
+        restart_policy: unless-stopped
+      register: container_result
+      retries: 3
+      delay: 10
