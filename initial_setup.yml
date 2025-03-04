@@ -42,3 +42,5 @@
         name: docker
         state: started
         enabled: yes
+    - name: Import the Docker and Chrony installation playbook
+      ansible.builtin.import_playbook: install_docker_chrony.yml
