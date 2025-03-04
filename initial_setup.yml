@@ -48,13 +48,6 @@
   become: yes  
   tasks:
 
-#    - name: Log in to GitHub Container Registry (if the image is private)
-#      community.docker.docker_login:
-#        registry_url: https://ghcr.io
-#        username: "{{ ghcr_username | default(omit) }}"  # Provide your GitHub username
-#        password: "{{ ghcr_password | default(omit) }}"  # Provide your GitHub token/password
-#      when: ghcr_username is defined and ghcr_password is defined
-
     - name: pull the docker_chrony image
       community.docker.docker_image_pull:
         name: ghcr.io/ftflstwd/docker_chrony:main
