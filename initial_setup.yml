@@ -58,7 +58,6 @@
     - name: pull the docker_chrony image
       community.docker.docker_image_pull:
         name: ghcr.io/ftflstwd/docker_chrony:main
-        source: pull
         tag: "main"
       register: pull_result
       retries: 3
@@ -67,7 +66,7 @@
 
     - name: deploy the docker_chrony container
       community.docker.docker_container:
-        name: chrony_container
+        name: chrony
         image: "ghcr.io/ftflstwd/docker_chrony:main"
         state: started
         restart_policy: unless-stopped
