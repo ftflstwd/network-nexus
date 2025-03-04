@@ -47,7 +47,7 @@
   hosts: all
   become: true  # Set to true if sudo privileges are required
   vars:
-    docker_image: "ghcr.io/ftflstwd/docker_chrony@sha256:f8eaefa66825473f30783ea518ff702e84eb3a8f919282375095e35ad27f852e"
+    docker_image: "ghcr.io/ftflstwd/docker_chrony@sha256:latest"
     container_name: "chrony"
 
 - name: Pull the specified Docker image
