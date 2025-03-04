@@ -43,39 +43,34 @@
         state: started
         enabled: yes
         
-- name: deploy docker_chrony container
-  hosts: all
-  become: true  # Set to true if sudo privileges are required
-  vars:
-    docker_image: "ghcr.io/ftflstwd/docker_chrony@sha256:latest"
-    container_name: "chrony"
+- name: deploy the docker_chrony container
+  hosts: localhost  
+  become: yes  
+  tasks:
 
-- name: Pull the specified Docker image
-  ansible.builtin.docker_image:
-    name: "{{ docker_image }}"
+#    - name: Log in to GitHub Container Registry (if the image is private)
+#      community.docker.docker_login:
+#        registry_url: https://ghcr.io
+#        username: "{{ ghcr_username | default(omit) }}"  # Provide your GitHub username
+#        password: "{{ ghcr_password | default(omit) }}"  # Provide your GitHub token/password
+#      when: ghcr_username is defined and ghcr_password is defined
+
+- name: pull the docker_chrony image
+  community.docker.docker_image:
+    name: ghcr.io/ftflstwd/docker_chrony:main
     source: pull
-    state: present
+    tag: "main"
   register: pull_result
   retries: 3
-  delay: 5
+  delay: 10
   until: pull_result is success
 
-- name: Ensure any existing container with the same name is stopped and removed
-  ansible.builtin.docker_container:
-    name: "{{ container_name }}"
-    state: absent
-    ignore_errors: true
-
-- name: Deploy the Docker container
-  ansible.builtin.docker_container:
-    name: "{{ container_name }}"
-    image: "{{ docker_image }}"
+- name: deploy the docker_chrony container
+  community.docker.docker_container:
+    name: chrony_container
+    image: "ghcr.io/ftflstwd/docker_chrony:main"
     state: started
     restart_policy: unless-stopped
-    network_mode: host
-    register: container_result
-
-- name: Verify the container is running
-  ansible.builtin.debug:
-    msg: "Container {{ container_name }} is running with ID {{ container_result.ansible_facts.docker_container.Id }}"
-    when: container_result.ansible_facts.docker_container.State.Running
+  register: container_result
+  retries: 3
+  delay: 10
