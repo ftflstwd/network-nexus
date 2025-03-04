@@ -43,11 +43,4 @@
         state: started
         enabled: yes
     
-    - name: Download the docker_chrony playbook
-      ansible.builtin.get_url:
-      url: https://raw.githubusercontent.com/ftflstwd/netnexus/main/install_docker_chrony.yml
-      dest: /opt/chrony/install_chrony_docker.yml
-      mode: '0644'
-    
-    - name: Import the Docker and Chrony installation playbook
-      ansible.builtin.import_playbook: install_docker_chrony.yml
+
