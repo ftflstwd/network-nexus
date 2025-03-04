@@ -36,11 +36,46 @@
       apt:
         name: docker-ce
         state: latest
-
+        
     - name: ensure docker service is running
       systemd:
         name: docker
         state: started
         enabled: yes
-    
+        
+- name: deploy docker_chrony container
+  hosts: all
+  become: true  # Set to true if sudo privileges are required
+  vars:
+    docker_image: "ghcr.io/ftflstwd/docker_chrony@sha256:f8eaefa66825473f30783ea518ff702e84eb3a8f919282375095e35ad27f852e"
+    container_name: "chrony"
 
+- name: Pull the specified Docker image
+  ansible.builtin.docker_image:
+    name: "{{ docker_image }}"
+    source: pull
+    state: present
+  register: pull_result
+  retries: 3
+  delay: 5
+  until: pull_result is success
+
+- name: Ensure any existing container with the same name is stopped and removed
+  ansible.builtin.docker_container:
+    name: "{{ container_name }}"
+    state: absent
+    ignore_errors: true
+
+- name: Deploy the Docker container
+  ansible.builtin.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ docker_image }}"
+    state: started
+    restart_policy: unless-stopped
+    network_mode: host
+    register: container_result
+
+- name: Verify the container is running
+  ansible.builtin.debug:
+    msg: "Container {{ container_name }} is running with ID {{ container_result.ansible_facts.docker_container.Id }}"
+    when: container_result.ansible_facts.docker_container.State.Running
