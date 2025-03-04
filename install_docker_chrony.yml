@@ -3,12 +3,6 @@
   hosts: localhost
   become: yes
 
-- name: Download the playbook file
-  ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/ftflstwd/netnexus/main/install_chrony_docker.yml
-    dest: /opt/chrony/install_chrony_docker.yml
-    mode: '0644'
-
 - name: deploy chrony
   ansible.builtin.command:
     cmd: docker-compose up -d
