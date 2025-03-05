@@ -1,6 +1,6 @@
 ---
 - name: initial_setup
-  hosts: all
+  hosts: localhost
   become: yes  # Run with sudo privileges
   
   tasks:
