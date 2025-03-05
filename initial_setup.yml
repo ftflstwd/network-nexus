@@ -13,11 +13,12 @@
       apt:
         name:
           - chrony
+          - git
           - kea
           - bind9
         state: present
 
-    - name: Download chrony configuration file
+    - name: download chrony configuration file
       get_url:
         url: https://raw.githubusercontent.com/ftflstwd/netnexus/main/assets/cloud-init/chrony/chrony.conf
         dest: /etc/chrony/chrony.conf
@@ -25,7 +26,7 @@
         owner: root
         group: root
 
-    - name: Ensure chrony service is running and enabled
+    - name: ensure chrony service is running and enabled
       service:
         name: chrony
         state: restarted
